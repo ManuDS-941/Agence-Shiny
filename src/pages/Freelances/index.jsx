@@ -2,8 +2,9 @@ import Card from '../../components/Card'
 import styled from 'styled-components'
 import colors from '../../utils/style/colors'
 import { Loader } from '../../utils/style/Atoms'
-import { useParams } from 'react-router'
-import { useState, useEffect } from 'react'
+// import { useParams } from 'react-router'
+// import { useState, useEffect } from 'react'
+import { useFetch, useTheme } from '../../utils/hooks'
 
 const CardsContainer = styled.div`
   display: grid;
@@ -33,49 +34,56 @@ const LoaderWrapper = styled.div`
   justify-content: center;
 `
 
-const freelanceProfiles = [
-    {
-        name: 'Jane Doe',
-        jobTitle: 'UX Designer',
-    },
-    {
-        name: 'Alexandra Dupont',
-        jobTitle: 'Developpeur frontend',
-    },
-    {
-        name: 'Jeanne Biche',
-        jobTitle: 'Devops',
-    },
-    {
-        name: 'Lauren Ipsum',
-        jobTitle: 'UX Designer',
-    },
-]
+// const freelanceProfiles = [
+//     {
+//         name: 'Jane Doe',
+//         jobTitle: 'UX Designer',
+//     },
+//     {
+//         name: 'Alexandra Dupont',
+//         jobTitle: 'Developpeur frontend',
+//     },
+//     {
+//         name: 'Jeanne Biche',
+//         jobTitle: 'Devops',
+//     },
+//     {
+//         name: 'Lauren Ipsum',
+//         jobTitle: 'UX Designer',
+//     },
+// ]
 
 function Freelances() {
-    const [freelancersList, setFreelancesList] = useState([])
-    const [isDataLoading, setDataLoading] = useState(false)
-    const [error, setError] = useState(false)
+    // const [freelancersList, setFreelancesList] = useState([])
+    // const [isDataLoading, setDataLoading] = useState(false)
+    // const [error, setError] = useState(false)
+
+    const { theme } = useTheme()
+    const { data, isLoading, error } = useFetch(`http://localhost:8000/freelances`)
+
+    // Ici le "?" permet de s'assurer que data existe bien.
+    // Vous pouvez en apprendre davantage sur cette notation ici :
+    // https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Operators/Optional_chaining
+    const freelancersList = data?.freelancersList
 
 
-
-    useEffect(() => {
-        async function fetchFreelances(){
-            setDataLoading(true)
-            try{
-                const response = await fetch(`http://localhost:8000/freelances`)
-                const { freelancersList } = await response.json()
-                setFreelancesList(freelancersList)
-            }
-            catch(err){
-                setError(true)
-            }
-            finally{
-                setDataLoading(false)
-            }
-        }
-        fetchFreelances()
-    }, [])
+    // useEffect(() => {
+    //     async function fetchFreelances(){
+    //         setDataLoading(true)
+    //         try{
+    //             const response = await fetch(`http://localhost:8000/freelances`)
+    //             const { freelancersList } = await response.json()
+    //             setFreelancesList(freelancersList)
+    //         }
+    //         catch(err){
+    //             setError(true)
+    //         }
+    //         finally{
+    //             setDataLoading(false)
+    //         }
+    //     }
+    //     fetchFreelances()
+    // }, [])
 
     if (error) {
         return <span>Oups il y a eu un problème</span>
@@ -83,27 +91,27 @@ function Freelances() {
 
     return (
         <div>
-            <PageTitle>Trouvez votre prestataire</PageTitle>
-            <PageSubtitle>
-                Chez Shiny nous réunissons les meilleurs profils pour vous.
-            </PageSubtitle>
-            {isDataLoading ? (
-                <LoaderWrapper>
-                    <Loader />
-                </LoaderWrapper>
-            ) : (
+        <PageTitle theme={theme}>Trouvez votre prestataire</PageTitle>
+        <PageSubtitle theme={theme}>
+            Chez Shiny nous réunissons les meilleurs profils pour vous.
+        </PageSubtitle>
+        {isLoading ? (
+            <LoaderWrapper>
+                <Loader theme={theme} />
+            </LoaderWrapper>
+        ) : (
             <CardsContainer>
                 {freelancersList.map((profile, index) => (
-                    <Card
-                        key={`${profile.name}-${index}`}
-                        label={profile.job}
-                        title={profile.name}
-                        picture={profile.picture}
-                    />
+                <Card
+                    key={`${profile.name}-${index}`}
+                    label={profile.job}
+                    title={profile.name}
+                    picture={profile.picture}
+                />
                 ))}
             </CardsContainer>
-            )}
-        </div>
+        )}
+    </div>
     )
 }
 
