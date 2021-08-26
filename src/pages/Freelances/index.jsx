@@ -97,11 +97,11 @@ function Freelances() {
         </PageSubtitle>
         {isLoading ? (
             <LoaderWrapper>
-                <Loader theme={theme} />
+                <Loader theme={theme} data-testid="loader" />
             </LoaderWrapper>
         ) : (
             <CardsContainer>
-                {freelancersList.map((profile, index) => (
+                {freelancersList?.map((profile, index) => (
                 <Card
                     key={`${profile.name}-${index}`}
                     label={profile.job}

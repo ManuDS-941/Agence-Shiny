@@ -81,23 +81,20 @@ function Results() {
 
     return isLoading ? (
         <LoaderWrapper>
-            <Loader />
+            <Loader data-testid="loader"/>
         </LoaderWrapper>
     ) : (
         <ResultsContainer theme={theme}>
             <ResultsTitle theme={theme}>
                 Les compétences dont vous avez besoin :
-                {resultsData &&
-                    resultsData.map((result, index) => (
-                        <JobTitle
-                            key={`result-title-${index}-${result.title}`}
-                            theme={theme}
-                        >
-                            {result.title}
-                            {index === resultsData.length - 1 ? '' : ','}
-                        </JobTitle>
-                    ))}
-            </ResultsTitle>
+                {resultsData && resultsData.map((result, index) => (
+                    <JobTitle
+                        key={`result-title-${index}-${result.title}`}
+                        theme={theme} >
+                        {formatJobList(result.title, resultsData.length, index)}
+                    </JobTitle>
+                ))}
+            </ResultsTitle> 
             <StyledLink $isFullLink to="/freelances">
                 Découvrez nos profils
             </StyledLink>
@@ -108,13 +105,31 @@ function Results() {
                             theme={theme}
                             key={`result-detail-${index}-${result.title}`}
                         >
-                            <JobTitle theme={theme}>{result.title}</JobTitle>
-                            <p>{result.description}</p>
+                            <JobTitle theme={theme} data-testid="job-title">{result.title}</JobTitle>
+                            <p data-testid="job-description">{result.description}</p>
                         </JobDescription>
                     ))}
             </DescriptionWrapper>
         </ResultsContainer>
     )
 }
+
+export function formatJobList(title, listLength, index) {
+    if (index === listLength - 1) {
+        return title
+    }
+    return `${title},`
+}
+
+export function formatQueryParams(answers) {
+    const answerNumbers = Object.keys(answers)
+    
+    return answerNumbers.reduce((previousParams, answerNumber, index) => {
+        const isFirstParam = index === 0
+        const separator = isFirstParam ? '' : '&'
+        return `${previousParams}${separator}a${answerNumber}=${answers[answerNumber]}`
+    }, '')
+}
+
 
 export default Results
