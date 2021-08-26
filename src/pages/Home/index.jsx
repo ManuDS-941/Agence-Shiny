@@ -1,6 +1,7 @@
-import styled, { useTheme } from 'styled-components'
+import styled from 'styled-components'
 import colors from '../../utils/style/colors'
 import { StyledLink } from '../../utils/style/Atoms'
+import { useTheme } from '../../utils/hooks'
 import HomeIllustration from '../../assets/home-illustration.svg'
 
 const HomeWrapper = styled.div`
@@ -38,18 +39,18 @@ const Illustration = styled.img`
   flex: 1;
 `
 
-export function sum(a, b){
-  return a + b
-}
+// export function sum(a, b){
+//   return a + b
+// }
 
 function Home() {
-  // const { theme } = useTheme()
-  
+  const { theme } = useTheme()
+
   return (
     <HomeWrapper>
-      <HomerContainer >
+      <HomerContainer theme={theme}>
         <LeftCol>
-          <StyledTitle >
+          <StyledTitle theme={theme}>
             Repérez vos besoins, on s’occupe du reste, avec les meilleurs
             talents
           </StyledTitle>

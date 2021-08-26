@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import colors from '../../utils/style/colors'
 import { Loader } from '../../utils/style/Atoms'
 import { SurveyContext } from '../../utils/context'
-import { useFetch } from '../../utils/hooks'
+import { useFetch, useTheme } from '../../utils/hooks'
 
 const SurveyContainer = styled.div`
   display: flex;
@@ -69,6 +69,7 @@ function Survey() {
   // const [error, setError] = useState(false)
   const { data, isLoading, error } = useFetch(`http://localhost:8000/survey`)
   const { surveyData } = data
+  const { theme } = useTheme()
 
   // Cette syntaxe permet aussi bien de faire des calls API.
   // Mais pour utiliser await dans une fonction, il faut que celle-ci soit async (pour asynchrone).
@@ -131,7 +132,7 @@ function Survey() {
     <SurveyContainer>
       <QuestionTitle>Question {questionNumber}</QuestionTitle>
       {isLoading ? (
-        <Loader />
+        <Loader data-testid="loader"  />
       ) : (
         <QuestionContent> {surveyData && surveyData[questionNumber]} </QuestionContent>
         )}
@@ -140,18 +141,20 @@ function Survey() {
           <ReplyBox
             onClick={() => saveReply(true)}
             isSelected={answers[questionNumber] === true}
+            theme={theme}
           >
             Oui
           </ReplyBox>
           <ReplyBox
             onClick={() => saveReply(false)}
             isSelected={answers[questionNumber] === false}
+            theme={theme}
           >
             Non
           </ReplyBox>
         </ReplyWrapper>
       )}
-      <LinkWrapper>
+      <LinkWrapper theme={theme}>
         <Link to={`/survey/${prevQuestionNumber}`}>Précédent</Link>
         {data[questionNumberInt + 1] ? (
           <Link to={`/survey/${nextQuestionNumber}`}>Suivant</Link>
